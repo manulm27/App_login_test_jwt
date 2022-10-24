@@ -10,8 +10,8 @@ def setup_admin(app):
     admin = Admin(app, name='4Geeks Admin', template_mode='bootstrap3')
 
 
-    # Add your models here, for example this is how we add a the User model to the admin
+    # Agregue sus modelos aquí, por ejemplo, así es como agregamos un modelo de usuario al administrador
     admin.add_view(ModelView(User, db.session))
 
-    # You can duplicate that line to add mew models
-    # admin.add_view(ModelView(YourModelName, db.session))
+    # Puede duplicar esa línea para agregar nuevos modelos
+    # admin.add_view(Model View(Your Model Name, db.session))

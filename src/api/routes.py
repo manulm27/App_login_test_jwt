@@ -1,5 +1,5 @@
 """
-This module takes care of starting the API Server, Loading the DB and Adding the endpoints
+Este módulo se encarga de iniciar el servidor API, cargar la base de datos y agregar los puntos finales
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User

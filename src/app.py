@@ -1,13 +1,13 @@
 """
-This module takes care of starting the API Server, Loading the DB and Adding the endpoints
+Este módulo se encarga de iniciar el servidor API, cargar la base de datos y agregar los puntos finales
 """
 import os
-from flask import Flask, request, jsonify, url_for, send_from_directory
+from flask import Flask, request, jsonify, url_for, send_from_directory, json
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from flask_cors import CORS
 from api.utils import APIException, generate_sitemap
-from api.models import db
+from api.models import db, User
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
@@ -19,7 +19,7 @@ static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 
-# database condiguration
+# configuracion de base de datos
 db_url = os.getenv("DATABASE_URL")
 app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 
@@ -27,7 +27,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 MIGRATE = Migrate(app, db, compare_type = True)
 db.init_app(app)
 
-# Allow CORS requests to this API
+# permitir solicitudes de CORS a esta API
 CORS(app)
 
 # add the admin
@@ -36,22 +36,22 @@ setup_admin(app)
 # add the admin
 setup_commands(app)
 
-# Add all endpoints form the API with a "api" prefix
+# Agregue todos los puntos finales de la API con el prefijo "api"
 app.register_blueprint(api, url_prefix='/api')
 
-# Handle/serialize errors like a JSON object
+# Manejar/serializar errores como un objeto JSON
 @app.errorhandler(APIException)
 def handle_invalid_usage(error):
     return jsonify(error.to_dict()), error.status_code
 
-# generate sitemap with all your endpoints
+# generar mapa del sitio con todos sus puntos finales
 @app.route('/')
 def sitemap():
     if ENV == "development":
         return generate_sitemap(app)
     return send_from_directory(static_file_dir, 'index.html')
 
-# any other endpoint will try to serve it like a static file
+# cualquier otro punto final intentará servirlo como un archivo estático
 @app.route('/<path:path>', methods=['GET'])
 def serve_any_other_file(path):
     if not os.path.isfile(os.path.join(static_file_dir, path)):
@@ -60,8 +60,22 @@ def serve_any_other_file(path):
     response.cache_control.max_age = 0 # avoid cache memory
     return response
 
+@app.route('/user', methods=['POST'])
+def user():
+    body = request.get_json()
+    data_user = ""
+    for data in body:
+        data_user = data
+    user = User(username=data_user['username'], email=data_user['email'], password=data_user['password'], is_active=data_user['is_active'])
+    db.session.add(user)
+    db.session.commit()
+    response_body = {
+        "message": "send data"
+    }
 
-# this only runs if `$ python src/main.py` is executed
+    return jsonify(response_body), 200
+
+# esto solo se ejecuta si se ejecuta `$ python src/main.py`
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3001))
     app.run(host='0.0.0.0', port=PORT, debug=True)
