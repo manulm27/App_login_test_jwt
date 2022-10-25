@@ -3,6 +3,7 @@ Este módulo se encarga de iniciar el servidor API, cargar la base de datos y ag
 """
 import os
 from flask import Flask, request, jsonify, url_for, send_from_directory, json
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from flask_cors import CORS
@@ -14,16 +15,17 @@ from api.commands import setup_commands
 
 #from models import Person
 
-ENV = os.getenv("FLASK_DEV")
+ENV = os.getenv("FLASK_ENV")
 static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../public/')
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 
-# configuracion de base de datos
+# configuracion de base de datos y jwt (token)
 db_url = os.getenv("DATABASE_URL")
 app.config['SQLALCHEMY_DATABASE_URI'] = db_url
-
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['JWT_SECRET_KEY'] = "type_secret"
+jwt = JWTManager(app)
 MIGRATE = Migrate(app, db, compare_type = True)
 db.init_app(app)
 
@@ -42,6 +44,7 @@ app.register_blueprint(api, url_prefix='/api')
 # Manejar/serializar errores como un objeto JSON
 @app.errorhandler(APIException)
 def handle_invalid_usage(error):
+
     return jsonify(error.to_dict()), error.status_code
 
 # generar mapa del sitio con todos sus puntos finales
@@ -49,6 +52,7 @@ def handle_invalid_usage(error):
 def sitemap():
     if ENV == "development":
         return generate_sitemap(app)
+
     return send_from_directory(static_file_dir, 'index.html')
 
 # cualquier otro punto final intentará servirlo como un archivo estático
@@ -58,15 +62,29 @@ def serve_any_other_file(path):
         path = 'index.html'
     response = send_from_directory(static_file_dir, path)
     response.cache_control.max_age = 0 # avoid cache memory
+
     return response
+
+@app.route('/token', methods=['POST'])
+def create_token():
+    email = request.json.get('email')
+    password = request.json.get('password')
+    user = User.query.filter(User.email==email, User.password==password).first()
+    if user == None:
+        return jsonify({'message_error': 'user not exist'}), 401
+    else:
+        access_token = create_access_token(identity=user.id)
+        return jsonify(
+            {
+                'token': access_token,
+                'user.id': user.id
+            }
+        )
 
 @app.route('/user', methods=['POST'])
 def user():
     body = request.get_json()
-    data_user = ""
-    for data in body:
-        data_user = data
-    user = User(username=data_user['username'], email=data_user['email'], password=data_user['password'], is_active=data_user['is_active'])
+    user = User(username=body['username'], email=body['email'], password=body['password'], is_active=body['is_active'])
     db.session.add(user)
     db.session.commit()
     response_body = {
