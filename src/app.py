@@ -67,9 +67,9 @@ def serve_any_other_file(path):
 
 @app.route('/token', methods=['POST'])
 def create_token():
-    email = request.json.get('email')
+    username = request.json.get('username')
     password = request.json.get('password')
-    user = User.query.filter(User.email==email, User.password==password).first()
+    user = User.query.filter(User.username==username, User.password==password).first()
     if user == None:
         return jsonify({'message_error': 'user not exist'}), 401
     else:
@@ -93,7 +93,7 @@ def protected():
 @app.route('/user', methods=['POST'])
 def user():
     body = request.get_json()
-    user = User(username=body['username'], email=body['email'], password=body['password'], is_active=body['is_active'])
+    user = User(username=body['username'], email=body['email'], password=body['password'])
     db.session.add(user)
     db.session.commit()
     response_body = {

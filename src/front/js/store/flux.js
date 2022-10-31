@@ -1,7 +1,18 @@
+import { bool } from "prop-types";
+
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			message: null,
+			register: {
+				username: '',
+				email: '',
+				password: ''
+			},
+			user: {
+				username: '',
+				password: '',
+			},
 			demo: [
 				{
 					title: "FIRST",
@@ -13,12 +24,40 @@ const getState = ({ getStore, getActions, setStore }) => {
 					background: "white",
 					initial: "white"
 				}
-			]
+			],
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
 			exampleFunction: () => {
 				getActions().changeColor(0, "green");
+			},
+
+			login: async ()=> {
+				const resp = await fetch('http://localhost:3001/token',
+					{
+						method: 'POST',
+						body: JSON.stringify(getStore().user),
+						headers: {
+							'Content-Type': 'application/json'
+						}
+					})
+					const data = await resp.json()
+					console.log(data)
+					return data
+			},
+
+			register: async ()=> {
+				const resp = await fetch('http://localhost:3001/user',
+					{
+						method: 'POST',
+						body: JSON.stringify(getStore().register),
+						headers: {
+							'Content-Type': 'application/json'
+						}
+					})
+					const data = await resp.json()
+					console.log(data)
+					return data
 			},
 
 			getMessage: async () => {
