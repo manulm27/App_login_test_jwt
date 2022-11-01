@@ -38,7 +38,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 							'Content-Type': 'application/json'
 						}
 					})
-					setStore({user:{}})
+					setStore({user: {}})
 					const data = await resp.json()
 					console.log(data)
 					return data
@@ -53,7 +53,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 							'Content-Type': 'application/json'
 						}
 					})
-					setStore({register:{}})
+					setStore({register: {}})
 					const data = await resp.json()
 					console.log(data)
 					return data
