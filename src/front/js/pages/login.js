@@ -22,7 +22,7 @@ export const Login = () => {
                 </div>
                 <div className="mb-3">
                     <label for="Password" className="form-label">Password</label>
-                    <input type="password" className="form-control" name='password' onChange={login_user} id="InputPassword1" />
+                    <input type="password" className="form-control" name='password' onChange={login_user} id="InputPassword1"/>
                 </div>
             </form>
             <button type="submit" className="btn btn-primary" onClick={actions.login}>Iniciar sesion</button>

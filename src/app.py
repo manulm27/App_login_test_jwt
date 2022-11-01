@@ -97,7 +97,7 @@ def user():
     db.session.add(user)
     db.session.commit()
     response_body = {
-        "message": "send data"
+        "message": "Registered user successfully"
     }
 
     return jsonify(response_body), 200

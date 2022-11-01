@@ -26,7 +26,7 @@ export const Register = () => {
                     <input type="email" className="form-control" name='email' onChange={new_user} id="InputEmail1" aria-describedby="emailHelp" />
                 </div>
                 <div className="mb-3">
-                    <label for="Password" className="form-label">Password</label>
+                    <label for="password" className="form-label">Password</label>
                     <input type="password" className="form-control" name='password' onChange={new_user} id="InputPassword1" />
                 </div>
             </form>

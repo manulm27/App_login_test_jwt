@@ -4,15 +4,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			message: null,
-			register: {
-				username: '',
-				email: '',
-				password: ''
-			},
-			user: {
-				username: '',
-				password: '',
-			},
+			register: {},
+			user: {},
 			demo: [
 				{
 					title: "FIRST",
@@ -32,6 +25,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 				getActions().changeColor(0, "green");
 			},
 
+			view: ()=>{
+				console.log(getStore())
+			},
+
 			login: async ()=> {
 				const resp = await fetch('http://localhost:3001/token',
 					{
@@ -41,6 +38,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 							'Content-Type': 'application/json'
 						}
 					})
+					setStore({user:{}})
 					const data = await resp.json()
 					console.log(data)
 					return data
@@ -55,6 +53,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 							'Content-Type': 'application/json'
 						}
 					})
+					setStore({register:{}})
 					const data = await resp.json()
 					console.log(data)
 					return data
