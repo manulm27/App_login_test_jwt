@@ -28,9 +28,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 			view: ()=>{
 				console.log(getStore())
 			},
-
-			login: async ()=> {
-				const resp = await fetch('http://localhost:3001/token',
+			collection_login: (e)=>{
+				const data = e
+				const { name, value } = data
+				getStore().user[name] = value
+				return getStore().user
+			},
+			request_login: async ()=> {
+				try{
+					const resp = await fetch('http://localhost:3001/token',
 					{
 						method: 'POST',
 						body: JSON.stringify(getStore().user),
@@ -38,14 +44,23 @@ const getState = ({ getStore, getActions, setStore }) => {
 							'Content-Type': 'application/json'
 						}
 					})
-					setStore({user: {}})
 					const data = await resp.json()
 					console.log(data)
+					localStorage.setItem('token', data['token'])
 					return data
+				}catch(err){
+					console.log({'Error': err})
+				}
 			},
-
-			register: async ()=> {
-				const resp = await fetch('http://localhost:3001/user',
+			collection_register: (e)=>{
+				const data = e
+				const { name, value } = data
+				getStore().register[name] = value
+				return getStore().register
+			},
+			request_register: async ()=> {
+				try{
+					const resp = await fetch('http://localhost:3001/user',
 					{
 						method: 'POST',
 						body: JSON.stringify(getStore().register),
@@ -53,16 +68,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 							'Content-Type': 'application/json'
 						}
 					})
-					setStore({register: {}})
 					const data = await resp.json()
 					console.log(data)
 					return data
+				}catch(err){
+					console.log({'Error': err})
+				}
 			},
-
 			getMessage: async () => {
 				try{
 					// fetching data from the backend
-					const resp = await fetch(process.env.BACKEND_URL + "/api/hello")
+					const resp = await fetch("http://localhost:3001/api/hello")
 					const data = await resp.json()
 					setStore({ message: data.message })
 					// don't forget to return something, that is how the async resolves
