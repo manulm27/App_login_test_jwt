@@ -3,6 +3,7 @@ import { bool } from "prop-types";
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
+			welcome:[],
 			message: null,
 			register: {},
 			user: {},
@@ -85,6 +86,27 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return data;
 				}catch(error){
 					console.log("Error loading message from backend", error)
+				}
+			},
+			view_protected: async ()=>{
+				let hash = localStorage.getItem('token')
+				try{
+				const resp = await fetch('http://localhost:3001/protected',
+					{
+						method: 'GET',
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': 'Bearer '+hash
+						}
+					}
+				)
+				const data = await resp.json()
+				if (resp.status == 200){
+					setStore({welcome: [...getStore().welcome, data]})
+				}
+				return data
+				}catch(err){
+					console.log(err)
 				}
 			},
 			changeColor: (index, color) => {

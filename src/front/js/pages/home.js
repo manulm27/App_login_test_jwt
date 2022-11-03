@@ -1,14 +1,25 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../store/appContext";
 import rigoImageUrl from "../../img/rigo-baby.jpg";
 import "../../styles/home.css";
+import { resolvePath } from "react-router-dom";
 
 export const Home = () => {
 	const { store, actions } = useContext(Context);
-	console.log(store)
+	const { user, setUser } = useState({})
+
+	useEffect(() => {
+		const data = new Promise((res, req) => {
+			res(actions.view_protected())
+		})
+			.then((res) => res)
+			.then((res) => { console.log(res) })
+
+	}, [])
+
 	return (
 		<div className="text-center mt-5">
-			<h1>Hello Rigo!!</h1>
+			<h1>Welcome {store.welcome.map((data, i)=>{return data.username})}</h1>
 			<p>
 				<img src={rigoImageUrl} />
 			</p>

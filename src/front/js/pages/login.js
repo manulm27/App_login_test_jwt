@@ -2,9 +2,12 @@ import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../store/appContext";
 import rigoImageUrl from "../../img/rigo-baby.jpg";
 import "../../styles/home.css";
+import { Link, useNavigate } from "react-router-dom";
+import { Home } from "./home";
 
 export const Login = () => {
     const { store, actions } = useContext(Context)
+    const navigate = useNavigate()
     const [ username, setUsername ] = useState('')
     const [ password, setPassword ] = useState('')
 
@@ -31,6 +34,7 @@ export const Login = () => {
                     alert('Ingresa tus datos correctamente!')
                 } else {
                     actions.request_login()
+                    navigate("/")
                 }
                 setUsername('')
                 setPassword('')

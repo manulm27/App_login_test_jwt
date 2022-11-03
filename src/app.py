@@ -82,13 +82,13 @@ def create_token():
         )
 
 #private endpoint
-@app.route('/example/protected', methods=['GET'])
+@app.route('/protected', methods=['GET'])
 @jwt_required()
 def protected():
     current_user_id = get_jwt_identity()
     user = User.query.get(current_user_id)
 
-    return jsonify([{'id': user.id, 'username': user.username}])
+    return jsonify({'id': user.id, 'username': user.username}), 200
 
 @app.route('/user', methods=['POST'])
 def user():

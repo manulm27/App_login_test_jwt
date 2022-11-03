@@ -12,6 +12,7 @@ export const Footer = () => {
 				<a href="#">Manuel Martret</a>
 			</p>
 			<button className="btn btn-primary m-2" onClick={actions.view}>View store</button>
+			<button className="btn btn-primary m-2" onClick={actions.view}>Cerrar session</button>
 		</footer>
 	)
 }
