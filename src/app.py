@@ -2,6 +2,8 @@
 Este módulo se encarga de iniciar el servidor API, cargar la base de datos y agregar los puntos finales
 """
 import os
+from werkzeug.security import check_password_hash as checkph
+from werkzeug.security import generate_password_hash as genph
 from flask import Flask, request, jsonify, url_for, send_from_directory, json
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
 from flask_migrate import Migrate
@@ -65,21 +67,52 @@ def serve_any_other_file(path):
 
     return response
 
-@app.route('/token', methods=['POST'])
-def create_token():
-    username = request.json.get('username')
-    password = request.json.get('password')
-    user = User.query.filter(User.username==username, User.password==password).first()
-    if user == None:
-        return jsonify({'message_error': 'user not exist'}), 401
+@app.route('/user', methods=['POST'])
+def add_user():
+    body = request.get_json()
+    print(body)
+
+    if body == None:
+        return jsonify({'¡Error! Invalid data'}), 400
+    elif 'username' not in body:
+        return jsonify({'message': 'you must add a username'}), 400
+    elif 'email' not in body:
+        return jsonify({'message': 'you must add a email'}), 400
+    elif 'password' not in body:
+        return jsonify({'message': 'you must add a password'}), 400
     else:
-        access_token = create_access_token(identity=user.id)
-        return jsonify(
-            {
-                'token': access_token,
-                'user.id': user.id
-            }
-        )
+        hash_pass = genph(body['password'])
+        user = User(username=body['username'], email=body['email'], password=hash_pass)
+        db.session.add(user)
+        db.session.commit()
+        return jsonify({'success': 'add user'}), 200
+
+@app.route('/login', methods=['POST'])
+def login():
+    if len(request.get_json()) == 0:
+        return jsonify({"message": "Enter you data"}), 401
+    username = request.json.get('username')
+    if username == None:
+        return jsonify({"message": "Enter your user"}), 401
+    password = request.json.get('password')
+    if password == None:
+        return jsonify({"message": "Enter your password"}), 401
+    user = User.query.filter_by(username=username).first()
+    if user == None:
+        return jsonify({"message": "The username or password are incorrect"}), 401
+    else:
+        security = checkph(user.password, password)
+        if security == False:
+            return jsonify({"message": "The username or password are incorrect"}), 401
+        else:
+            access_token = create_access_token(identity=user.id)
+            return jsonify(
+                {
+                    'message': 'Success '+user.username,
+                    'token': access_token,
+                    'user.id': user.id
+                }
+            ), 200
 
 #private endpoint
 @app.route('/protected', methods=['GET'])
@@ -90,17 +123,6 @@ def protected():
 
     return jsonify({'id': user.id, 'username': user.username}), 200
 
-@app.route('/user', methods=['POST'])
-def user():
-    body = request.get_json()
-    user = User(username=body['username'], email=body['email'], password=body['password'])
-    db.session.add(user)
-    db.session.commit()
-    response_body = {
-        "message": "Registered user successfully"
-    }
-
-    return jsonify(response_body), 200
 
 # esto solo se ejecuta si se ejecuta `$ python src/main.py`
 if __name__ == '__main__':

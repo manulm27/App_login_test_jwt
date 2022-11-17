@@ -33,8 +33,8 @@ export const Login = () => {
                 if (username == '' || password == '') {
                     alert('Ingresa tus datos correctamente!')
                 } else {
-                    actions.request_login()
-                    navigate("/")
+                    let data = actions.request_login()
+                        .then((res) => navigate("/"))
                 }
                 setUsername('')
                 setPassword('')

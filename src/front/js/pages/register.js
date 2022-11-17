@@ -14,7 +14,7 @@ export const Register = () => {
             <form actions='#'>
                 <div className="mb-3">
                     <label htmlFor="username" className="form-label">Username</label>
-                    <input type="username" className="form-control" name='username' onChange={(e) => {
+                    <input type="text" className="form-control" name='username' onChange={(e) => {
                         actions.collection_register(e.target)
                         setUsername(e.target.value)
                     }} id="InputUsername1" aria-describedby="usernameHelp" value={username}/>

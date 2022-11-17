@@ -9,17 +9,13 @@ export const Home = () => {
 	const { user, setUser } = useState({})
 
 	useEffect(() => {
-		const data = new Promise((res, req) => {
-			res(actions.view_protected())
-		})
-			.then((res) => res)
-			.then((res) => { console.log(res) })
-
+		let load = actions.view_protected()
+		.then((res)=>console.log(res))
 	}, [])
 
 	return (
 		<div className="text-center mt-5">
-			<h1>Welcome {store.welcome.map((data, i)=>{return data.username})}</h1>
+			<h1>Welcome {store.session.map((data, i)=>{return data.username})}</h1>
 			<p>
 				<img src={rigoImageUrl} />
 			</p>
