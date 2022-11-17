@@ -113,10 +113,28 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			logout: () => {
-				localStorage.removeItem('token')
-				if(localStorage.getItem('token') == null){
-					return false
+			logout: async () => {
+				let hash = localStorage.getItem('token')
+				try {
+					const resp = await fetch('http://localhost:3001/logout',
+						{
+							method: 'DELETE',
+							headers: {
+								'Content-Type': 'application/json',
+								'Authorization': 'Bearer ' + hash
+							}
+						}
+					)
+					const data = await resp.json()
+					console.log(data)
+					if (resp.status == 200) {
+						localStorage.removeItem('token')
+						if (localStorage.getItem('token') == null) {
+							return data.message
+						}
+					}
+				} catch (err) {
+					console.log(err)
 				}
 			},
 

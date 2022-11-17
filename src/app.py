@@ -106,6 +106,9 @@ def login():
             return jsonify({"message": "The username or password are incorrect"}), 401
         else:
             access_token = create_access_token(identity=user.id)
+            token = Token(id=user.id, token=access_token)
+            db.session.add(token)
+            db.session.commit()
             return jsonify(
                 {
                     'message': 'Success '+user.username,
@@ -113,6 +116,17 @@ def login():
                     'user.id': user.id
                 }
             ), 200
+
+@app.route('/logout', methods=['DELETE'])
+@jwt_required()
+def logout():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+    token = Token.query.get(user.id)
+    db.session.delete(token)
+    db.session.commit()
+
+    return jsonify({'message': 'Finish session'})
 
 #private endpoint
 @app.route('/protected', methods=['GET'])

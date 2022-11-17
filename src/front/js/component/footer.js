@@ -15,8 +15,9 @@ export const Footer = () => {
 			</p>
 			<button className="btn btn-primary m-2" onClick={actions.view}>View store</button>
 			<button className="btn btn-primary m-2" onClick={() => {
-				actions.logout()
-				navigate('/login')
+				let action = actions.logout()
+				.then((res)=>{console.log(res)})
+				.then((res)=>{navigate('/login')})
 			}}>Cerrar session</button>
 		</footer>
 	)
