@@ -23,14 +23,16 @@ export const Footer = () => {
 				Made by{" "}
 				<a href="#">Manuel Martret</a>
 			</p>
-			<button className="btn btn-primary m-2" onClick={actions.view}>View store</button>
-			<div className={view_button()}>
-			<button className="btn btn-primary m-2" onClick={() => {
+			<button className={'btn btn-primary m-2'+" "+view_button()} onClick={() => {
 				actions.logout()
-				.then((res)=>{console.log(res)})
-				.then((res)=>{navigate('/login')})
+				.then((res)=> res)
+				.then((res)=>{
+					navigate('/login')
+					return res
+				})
+				.then((res)=>{alert(res.message)})
 			}}>Logout</button>
-			</div>
+
 
 		</footer>
 	)

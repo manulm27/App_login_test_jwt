@@ -81,14 +81,20 @@ def add_user():
     elif 'password' not in body:
         return jsonify({'message': 'you must add a password'}), 400
     else:
-        hash_pass = genph(body['password'])
-        user = User(username=body['username'], email=body['email'], password=hash_pass)
-        db.session.add(user)
-        db.session.commit()
-        return jsonify({'message': 'Success, registered user'}), 200
+        validationA = User.query.filter_by(username=body['username']).first()
+        validationB = User.query.filter_by(email=body['email']).first()
+        if validationA != None or validationB != None:
+            return jsonify({'message': 'This user already exists'}), 401
+        else:
+            hash_pass = genph(body['password'])
+            user = User(username=body['username'], email=body['email'], password=hash_pass)
+            db.session.add(user)
+            db.session.commit()
+            return jsonify({'message': 'Success, registered user'}), 200
 
 @app.route('/login', methods=['POST'])
 def login():
+    print(request.get_json())
     if len(request.get_json()) == 0:
         return jsonify({"message": "Enter you data."}), 401
     username = request.json.get('username')
@@ -122,7 +128,11 @@ def login():
 def logout():
     current_user_id = get_jwt_identity()
     user = User.query.get(current_user_id)
-    token = Token.query.get(user.id)
+    print(f'{current_user_id} {user}')
+    if current_user_id == None:
+        token = Token.query.all()
+    else:
+        token = Token.query.get(user.id)
     db.session.delete(token)
     db.session.commit()
 

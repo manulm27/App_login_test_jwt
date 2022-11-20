@@ -27,10 +27,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				getActions().changeColor(0, "green");
 			},
 
-			view: () => {
-				console.log(getStore())
-			},
-
 			request_login: async () => {
 				try {
 					const resp = await fetch('http://localhost:3001/login',
@@ -65,7 +61,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 							}
 						})
 					const data = await resp.json()
-					console.log(data)
+					getStore().register = {}
 					return {'status': resp.status, 'mesagge': data.message}
 				} catch (err) {
 					console.log({ 'Error': err })
@@ -100,7 +96,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					)
 					const data = await resp.json()
 					if (resp.status == 200) {
-						if (data.id in getStore().session){
+						if (getStore().session.length >= 1){
 							return data
 						}else{
 							setStore({ session: [...getStore().session, data] })
@@ -126,14 +122,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 						}
 					)
 					const data = await resp.json()
-					console.log(data)
-					if (resp.status == 200) {
-						localStorage.removeItem('token')
-						setStore({session: [], user: []})
-						if (localStorage.getItem('token') == null) {
-							return data.message
-						}
-					}
+					localStorage.removeItem('token')
+					setStore({ session: [], user: {} })
+					return data
 				} catch (err) {
 					console.log(err)
 				}

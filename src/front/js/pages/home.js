@@ -19,12 +19,12 @@ export const Home = () => {
 				<img src={rigoImageUrl} />
 			</p>
 			<div className="alert alert-info">
-				{store.message || "Loading message from the backend (make sure your python backend is running)..."}
+				<h2>APP LOG_TEST</h2>
 			</div>
 			<p>
-				This boilerplate comes with lots of documentation:{" "}
-				<a href="https://github.com/4GeeksAcademy/react-flask-hello/tree/95e0540bd1422249c3004f149825285118594325/docs">
-					Read documentation
+				You can see here the code of this app{" "}
+				<a href="https://github.com/manulm27/react_flask_api_jwt.git">
+					Here
 				</a>
 			</p>
 		</div>
