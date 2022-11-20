@@ -23,7 +23,7 @@ export const Home = () => {
 			</div>
 			<p>
 				You can see here the code of this app{" "}
-				<a href="https://github.com/manulm27/react_flask_api_jwt.git">
+				<a href="https://github.com/manulm27/App_login_test_jwt.git">
 					Here
 				</a>
 			</p>
