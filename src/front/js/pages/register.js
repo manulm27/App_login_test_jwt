@@ -8,9 +8,33 @@ export const Register = () => {
     const [ username, setUsername ] = useState('')
     const [ email, setEmail ] = useState('')
     const [ password, setPassword ] = useState('')
+    const [ resp, setResp ] = useState('')
+
+    const response = (data)=>{
+        console.log(data)
+        setResp(data)
+        store.register = {}
+    }
+
+    const color_alert = ()=>{
+        if (resp.status == 200){
+            return 'info'
+        }else{
+            return 'danger'
+        }
+    }
+
+    const view_alert = ()=>{
+        if (resp != ''){
+            return 'element-show'
+        }else{
+            return 'd-none'
+        }
+    }
 
     return (
         <div className="container w-50 p-4">
+            <h1 className="text-center mb-4">Register</h1>
             <form actions='#'>
                 <div className="mb-3">
                     <label htmlFor="username" className="form-label">Username</label>
@@ -35,15 +59,17 @@ export const Register = () => {
                 </div>
             </form>
             <button type="submit" className="btn btn-primary" onClick={() => {
-                if (username == '' || email == '' || password == '') {
-                    alert('Ingresa tus datos correctamente!')
-                } else {
                     actions.request_register()
-                }
+                    .then((res)=>{response(res)})
+
                 setUsername('')
                 setEmail('')
                 setPassword('')
             }}>Registrar</button>
+
+            <div className={'alert alert-'+color_alert()+" " +'mt-4'+ " " + view_alert()} role="alert">
+                {resp.mesagge}
+            </div>
         </div>
     );
 }

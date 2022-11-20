@@ -26,7 +26,7 @@ class User(db.Model):
 class Token(db.Model):
     __tablename__='token'
     id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
-    token = db.Column(db.String(150), unique=True, nullable=False)
+    token = db.Column(db.String(270), unique=True, nullable=False)
 
     def __repr__(self):
         return f'<User {self.id}>'

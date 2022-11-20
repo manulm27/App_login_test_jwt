@@ -4,6 +4,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			session: [],
+			resp_login: {},
 			message: null,
 			register: {},
 			user: {},
@@ -40,14 +41,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 								'Content-Type': 'application/json'
 							}
 						})
-					console.log(resp.status)
 					const data = await resp.json()
-					console.log(data)
 					if (resp.status == 200) {
 						localStorage.setItem('token', data['token'])
-						return data
-					} else {
-						return data.message
+						return {'status': resp.status, 'data': data.message}
+					}
+					if (resp.status != 200){
+						return {'status': resp.status, 'data': data.message}
 					}
 				} catch (err) {
 					console.log({ 'Error': err })
@@ -66,7 +66,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						})
 					const data = await resp.json()
 					console.log(data)
-					return data
+					return {'status': resp.status, 'mesagge': data.message}
 				} catch (err) {
 					console.log({ 'Error': err })
 				}
@@ -129,6 +129,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log(data)
 					if (resp.status == 200) {
 						localStorage.removeItem('token')
+						setStore({session: [], user: []})
 						if (localStorage.getItem('token') == null) {
 							return data.message
 						}

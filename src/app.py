@@ -72,8 +72,8 @@ def add_user():
     body = request.get_json()
     print(body)
 
-    if body == None:
-        return jsonify({'¡Error! Invalid data'}), 400
+    if len(request.get_json()) == 0:
+        return jsonify({"message": "Enter you data."}), 401
     elif 'username' not in body:
         return jsonify({'message': 'you must add a username'}), 400
     elif 'email' not in body:
@@ -85,25 +85,25 @@ def add_user():
         user = User(username=body['username'], email=body['email'], password=hash_pass)
         db.session.add(user)
         db.session.commit()
-        return jsonify({'success': 'add user'}), 200
+        return jsonify({'message': 'Success, registered user'}), 200
 
 @app.route('/login', methods=['POST'])
 def login():
     if len(request.get_json()) == 0:
-        return jsonify({"message": "Enter you data"}), 401
+        return jsonify({"message": "Enter you data."}), 401
     username = request.json.get('username')
     if username == None:
-        return jsonify({"message": "Enter your user"}), 401
+        return jsonify({"message": "Enter your user."}), 401
     password = request.json.get('password')
     if password == None:
-        return jsonify({"message": "Enter your password"}), 401
+        return jsonify({"message": "Enter your password."}), 401
     user = User.query.filter_by(username=username).first()
     if user == None:
-        return jsonify({"message": "The username or password are incorrect"}), 401
+        return jsonify({"message": "The username or password are incorrect."}), 401
     else:
         security = checkph(user.password, password)
         if security == False:
-            return jsonify({"message": "The username or password are incorrect"}), 401
+            return jsonify({"message": "The username or password are incorrect."}), 401
         else:
             access_token = create_access_token(identity=user.id)
             token = Token(id=user.id, token=access_token)

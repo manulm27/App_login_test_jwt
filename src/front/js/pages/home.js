@@ -6,16 +6,15 @@ import { resolvePath } from "react-router-dom";
 
 export const Home = () => {
 	const { store, actions } = useContext(Context);
-	const { user, setUser } = useState({})
 
 	useEffect(() => {
-		let load = actions.view_protected()
+		actions.view_protected()
 		.then((res)=>console.log(res))
 	}, [])
 
 	return (
 		<div className="text-center mt-5">
-			<h1>Welcome {store.session.map((data, i)=>{return data.username})}</h1>
+			<h1 className={store.session.length > 0 ? 'element-show' : 'd-none'}>Welcome {store.session.map((data, i)=>{return data.username})}</h1>
 			<p>
 				<img src={rigoImageUrl} />
 			</p>
