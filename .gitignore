@@ -54,6 +54,7 @@ Thumbs.db
 *.zip
 
 # ignore node/grunt dependency directories
+migrations/
 node_modules/
 
 # webpack output
