@@ -9,16 +9,16 @@ import { element } from "prop-types";
 export const Login = () => {
     const { store, actions } = useContext(Context)
     const navigate = useNavigate()
-    const [ username, setUsername ] = useState('')
-    const [ password, setPassword ] = useState('')
-    const [ status, setStatus ] = useState('')
-    const [ alert, setAlert ] = useState('')
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [status, setStatus] = useState('')
+    const [alert, setAlert] = useState('')
 
-    const response = (data)=>{
-        if (data.status == 200){
+    const response = (data) => {
+        if (data.status == 200) {
             setAlert(false)
             navigate('/')
-        }else{
+        } else {
             console.log(data)
             setStatus(data.data)
             setAlert(true)
@@ -26,10 +26,10 @@ export const Login = () => {
         }
     }
 
-    const view_alert = ()=>{
-        if (alert == true){
+    const view_alert = () => {
+        if (alert == true) {
             return 'element-show'
-        }else{
+        } else {
             return 'd-none'
         }
     }
@@ -54,11 +54,11 @@ export const Login = () => {
                 </div>
             </form>
             <button type="submit" className="btn btn-primary mb-3" onClick={() => {
-                    let data = actions.request_login()
-                        .then((res) => {
-                            return res
-                        })
-                        .then((res) => response(res))
+                let data = actions.request_login()
+                    .then((res) => {
+                        return res
+                    })
+                    .then((res) => response(res))
 
                 setUsername('')
                 setPassword('')

@@ -9,12 +9,12 @@ export const Home = () => {
 
 	useEffect(() => {
 		actions.view_protected()
-		.then((res)=>console.log(res))
+			.then((res) => console.log(res))
 	}, [])
 
 	return (
 		<div className="text-center mt-5">
-			<h1 className={store.session.length > 0 ? 'element-show' : 'd-none'}>Welcome {store.session.map((data, i)=>{return data.username})}</h1>
+			<h1 className={store.session.length > 0 ? 'element-show' : 'd-none'}>Welcome {store.session.map((data, i) => { return data.username })}</h1>
 			<p>
 				<img src={rigoImageUrl} />
 			</p>

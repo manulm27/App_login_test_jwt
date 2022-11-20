@@ -40,10 +40,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const data = await resp.json()
 					if (resp.status == 200) {
 						localStorage.setItem('token', data['token'])
-						return {'status': resp.status, 'data': data.message}
+						return { 'status': resp.status, 'data': data.message }
 					}
-					if (resp.status != 200){
-						return {'status': resp.status, 'data': data.message}
+					if (resp.status != 200) {
+						return { 'status': resp.status, 'data': data.message }
 					}
 				} catch (err) {
 					console.log({ 'Error': err })
@@ -62,7 +62,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						})
 					const data = await resp.json()
 					getStore().register = {}
-					return {'status': resp.status, 'mesagge': data.message}
+					return { 'status': resp.status, 'mesagge': data.message }
 				} catch (err) {
 					console.log({ 'Error': err })
 				}
@@ -96,9 +96,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 					)
 					const data = await resp.json()
 					if (resp.status == 200) {
-						if (getStore().session.length >= 1){
+						if (getStore().session.length >= 1) {
 							return data
-						}else{
+						} else {
 							setStore({ session: [...getStore().session, data] })
 							return data
 						}

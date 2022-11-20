@@ -6,13 +6,13 @@ import { Link, useNavigate } from "react-router-dom";
 export const Footer = () => {
 	const navigate = useNavigate()
 	const { store, actions } = useContext(Context)
-	const [ session, setSession ] = useState('')
+	const [session, setSession] = useState('')
 
-	let view_button = ()=>{
+	let view_button = () => {
 		let value = localStorage.getItem('token')
-		if (value != null){
+		if (value != null) {
 			return 'element-show'
-		}else{
+		} else {
 			return 'd-none'
 		}
 	}
@@ -23,14 +23,14 @@ export const Footer = () => {
 				Made by{" "}
 				<a href="#">Manuel Martret</a>
 			</p>
-			<button className={'btn btn-primary m-2'+" "+view_button()} onClick={() => {
+			<button className={'btn btn-primary m-2' + " " + view_button()} onClick={() => {
 				actions.logout()
-				.then((res)=> res)
-				.then((res)=>{
-					navigate('/login')
-					return res
-				})
-				.then((res)=>{alert(res.message)})
+					.then((res) => res)
+					.then((res) => {
+						navigate('/login')
+						return res
+					})
+					.then((res) => { alert(res.message) })
 			}}>Logout</button>
 
 
