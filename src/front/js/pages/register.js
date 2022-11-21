@@ -11,7 +11,6 @@ export const Register = () => {
     const [resp, setResp] = useState('')
 
     const response = (data) => {
-        console.log(data)
         setResp(data)
         store.register = {}
     }

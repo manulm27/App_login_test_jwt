@@ -9,7 +9,6 @@ export const Home = () => {
 
 	useEffect(() => {
 		actions.view_protected()
-			.then((res) => console.log(res))
 	}, [])
 
 	return (

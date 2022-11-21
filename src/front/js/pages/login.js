@@ -19,7 +19,6 @@ export const Login = () => {
             setAlert(false)
             navigate('/')
         } else {
-            console.log(data)
             setStatus(data.data)
             setAlert(true)
             store.user = {}
@@ -54,7 +53,7 @@ export const Login = () => {
                 </div>
             </form>
             <button type="submit" className="btn btn-primary mb-3" onClick={() => {
-                let data = actions.request_login()
+                actions.request_login()
                     .then((res) => {
                         return res
                     })

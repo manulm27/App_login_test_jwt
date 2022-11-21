@@ -41,8 +41,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					if (resp.status == 200) {
 						localStorage.setItem('token', data['token'])
 						return { 'status': resp.status, 'data': data.message }
-					}
-					if (resp.status != 200) {
+					}else{
 						return { 'status': resp.status, 'data': data.message }
 					}
 				} catch (err) {

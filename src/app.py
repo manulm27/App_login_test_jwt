@@ -75,11 +75,11 @@ def add_user():
     if len(request.get_json()) == 0:
         return jsonify({"message": "Enter you data."}), 401
     elif 'username' not in body:
-        return jsonify({'message': 'you must add a username'}), 400
+        return jsonify({'message': 'you must add a username'}), 401
     elif 'email' not in body:
-        return jsonify({'message': 'you must add a email'}), 400
+        return jsonify({'message': 'you must add a email'}), 401
     elif 'password' not in body:
-        return jsonify({'message': 'you must add a password'}), 400
+        return jsonify({'message': 'you must add a password'}), 401
     else:
         validationA = User.query.filter_by(username=body['username']).first()
         validationB = User.query.filter_by(email=body['email']).first()
@@ -128,7 +128,6 @@ def login():
 def logout():
     current_user_id = get_jwt_identity()
     user = User.query.get(current_user_id)
-    print(f'{current_user_id} {user}')
     if current_user_id == None:
         token = Token.query.all()
     else:
@@ -136,7 +135,7 @@ def logout():
     db.session.delete(token)
     db.session.commit()
 
-    return jsonify({'message': 'Finish session'})
+    return jsonify({'message': 'Finish session'}), 200
 
 #private endpoint
 @app.route('/protected', methods=['GET'])

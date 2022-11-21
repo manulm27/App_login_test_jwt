@@ -6,7 +6,6 @@ import { Link, useNavigate } from "react-router-dom";
 export const Footer = () => {
 	const navigate = useNavigate()
 	const { store, actions } = useContext(Context)
-	const [session, setSession] = useState('')
 
 	let view_button = () => {
 		let value = localStorage.getItem('token')
@@ -25,7 +24,6 @@ export const Footer = () => {
 			</p>
 			<button className={'btn btn-primary m-2' + " " + view_button()} onClick={() => {
 				actions.logout()
-					.then((res) => res)
 					.then((res) => {
 						navigate('/login')
 						return res
